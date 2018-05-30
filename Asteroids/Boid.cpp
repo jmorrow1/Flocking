@@ -11,13 +11,15 @@ const float RAD_TO_DEG = 360.0f / TWO_PI;
 
 const float desiredSeparation = 25.0f;
 
-Boid::Boid() : Boid(0, 0, 8)
+Boid::Boid()
 {
 	
 }
 
-Boid::Boid(float x, float y, float r)
+Boid::Boid(float x, float y, float r, Color color)
 {
+	this->color = color;
+
 	this->pos = Vector2f(x, y);
 
 	float vx = -1 + (rand() % 3);
@@ -36,6 +38,9 @@ Boid::Boid(float x, float y, float r)
 	shape.setPoint(1, Vector2f(r * cos(0.75f * PI), r * sin(0.75f * PI)));
 	shape.setPoint(2, Vector2f(r * cos(1.25f * PI), r * sin(1.25f * PI)));
 	shape.setFillColor(Color::White);
+
+	blob.setRadius(2);
+	blob.setFillColor(color);
 }
 
 Boid::~Boid()
@@ -43,7 +48,7 @@ Boid::~Boid()
 
 }
 
-void Boid::seek(const Vector2f& target)
+void Boid::seek(const Vector2f& target, float weight)
 {
 	Vector2f desiredVelocity = target - pos;
 	normalize(desiredVelocity);
@@ -52,7 +57,7 @@ void Boid::seek(const Vector2f& target)
 	Vector2f steering = desiredVelocity - vel;
 	limit(steering, maxForce);
 
-	acc += steering;
+	acc += steering * weight;
 }
 
 void Boid::wrapToWindow(RenderWindow& window)
@@ -173,7 +178,7 @@ void Boid::separateFrom(std::vector<Boid*>& boids)
 		steering -= vel;
 		limit(steering, maxForce);
 
-		acc += steering;
+		acc += separationWeight * steering;
 	}
 
 	
@@ -202,7 +207,7 @@ void Boid::alignWith(std::vector<Boid*>& boids)
 		Vector2f steering = sum - vel;
 		limit(steering, maxForce);
 
-		acc += steering;
+		acc += alignmentWeight * steering;
 	}
 }
 
@@ -226,7 +231,7 @@ void Boid::cohereWith(std::vector<Boid*>& boids)
 	if (sum.x != 0 || sum.y != 0)
 	{
 		sum /= (float) neighborCount;
-		seek(sum);
+		seek(sum, coherenceWeight);
 	}
 }
 
@@ -244,7 +249,13 @@ void Boid::update()
 void Boid::draw(RenderWindow& window)
 {
 	window.draw(shape);
-	wrapToWindow(window);
+	wrapToWindow(window);	
+}
+
+void Boid::paint(RenderTexture* offscreenCanvas)
+{
+	blob.setPosition(pos);
+	offscreenCanvas->draw(blob);
 }
 
 float Boid::getX()

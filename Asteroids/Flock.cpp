@@ -6,9 +6,10 @@
 
 #include "vector_math.h"
 
-Flock::Flock(RenderWindow* window)
+Flock::Flock(RenderWindow* window, RenderTexture* offscreenCanvas)
 {
 	this->window = window;
+	this->offscreenCanvas = offscreenCanvas;
 
 	for (int i = 0; i < w; i++)
 	{
@@ -26,11 +27,6 @@ Flock::~Flock()
 
 void Flock::update()
 {
-	//for (int i = 0; i < boidCount; i++)
-	//{
-	//	boidList[i].update();		
-	//}
-
 	for (int i = 0; i < w; i++)
 	{
 		for (int j = 0; j < h; j++)
@@ -38,9 +34,9 @@ void Flock::update()
 			vector<Boid*> boidList = vector<Boid*>();
 
 			int x1 = (i - 1 >= 0) ? i-1 : 0;
-			int x2 = (i + 1 < w) ? i+1 : w-1;
+			int x2 = (i + 1 <  w) ? i+1 : w-1;
 			int y1 = (j - 1 >= 0) ? j-1 : 0;
-			int y2 = (j + 1 < h) ? j+1 : h-1;
+			int y2 = (j + 1 <  h) ? j+1 : h-1;
 
 			for (int x = x1; x < x2; x++)
 			{
@@ -84,8 +80,6 @@ void Flock::update()
 			boidBins[j][i]->push_back(&boidList[n]);
 		}
 	}
-
-
 	//std::cout << boidList.size() << std::endl;
 }
 
@@ -94,6 +88,11 @@ void Flock::draw()
 	for (int i = 0; i < boidCount; i++)
 	{
 		boidList[i].draw(*window);
+	}
+
+	for (int i = 0; i < boidCount; i++)
+	{
+		boidList[i].paint(offscreenCanvas);
 	}
 }
 
@@ -112,7 +111,7 @@ void Flock::addBoid(Boid boid)
 	int i = boid.getX() / binSqrt;
 	int j = boid.getY() / binSqrt;
 
-	if (boidCount < boidCapacity && 
+	if (boidCount < boidCapacity-1 && 
 		0 <= i && i < w && 0 <= j && j < h)
 	{
 		// add to master list

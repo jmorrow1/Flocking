@@ -78,7 +78,9 @@ int main()
 	return 0;
 }
 
-Flock boidContainer = Flock(&window);
+RenderTexture offscreenCanvas;
+Sprite sprite;
+Flock boidContainer = Flock(&window, &offscreenCanvas);
 float boidRadius = 6;
 
 /*************************
@@ -87,7 +89,8 @@ float boidRadius = 6;
 
 void setup()
 {
-
+	offscreenCanvas.create(window.getSize().x, window.getSize().y);
+	sprite.setTexture(offscreenCanvas.getTexture());
 }
 
 /*****************
@@ -107,20 +110,35 @@ void update()
 void draw()
 {
 	window.clear();	
+
+	// background canvas (paint blobs)
+	
+	offscreenCanvas.display();
+	window.draw(sprite);
+
+	// foreground canvas (boids)
 	boidContainer.draw();
+
 	window.display();
+	
 }
 
 /*****************
  **** Events *****
  *****************/
 
+void createBoid(float x, float y)
+{
+	Color boidColor = Color(rand() % 100, 100 + rand() % 50, 150 + rand() % 50, 255);
+	boidContainer.addBoid(Boid(x, y, boidRadius, boidColor));
+}
+
 void mousePressed()
 {
 	if (Mouse::isButtonPressed(Mouse::Button::Left))
 	{
 		Vector2i mousePosition = Mouse::getPosition(window);
-		boidContainer.addBoid(Boid(mousePosition.x, mousePosition.y, boidRadius));
+		createBoid(mousePosition.x, mousePosition.y);
 	}
 }
 
@@ -129,6 +147,6 @@ void mouseMoved()
 	if (Mouse::isButtonPressed(Mouse::Button::Left))
 	{
 		Vector2i mousePosition = Mouse::getPosition(window);
-		boidContainer.addBoid(Boid(mousePosition.x, mousePosition.y, boidRadius));
+		createBoid(mousePosition.x, mousePosition.y);
 	}
 }

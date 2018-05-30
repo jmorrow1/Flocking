@@ -17,20 +17,28 @@ private:
 	float separationRadius = 35;
 	float cohereRadius = 25;
 
+	float alignmentWeight = 1.0f;
+	float separationWeight = 1.0f;
+	float coherenceWeight = 1.0f;
+
+	Color color;
+
 	Vector2f pos, vel, acc;
 	float radius;
 	float maxForce;
 	float maxSpeed;
-	
+	CircleShape blob;
+
+	ConvexShape shape;
+
 	void wrapToWindow(RenderWindow& window);
 
 public:
-	ConvexShape shape;
 	Boid();
-	Boid(float x, float y, float r);
+	Boid(float x, float y, float r, Color color);
 	~Boid();
 
-	void seek(const Vector2f& target);
+	void seek(const Vector2f& target, float weight);
 	
 	void flockWith(std::vector<Boid*>& boids);
 	void separateFrom(std::vector<Boid*>& boids);
@@ -39,6 +47,7 @@ public:
 
 	void update();
 	void draw(RenderWindow& window);
+	void paint(RenderTexture* offscreenCanvas);
 	
 	float getX();
 	float getY();
