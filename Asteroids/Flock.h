@@ -8,10 +8,14 @@ class Flock
 {
 private:
 	// bins of boids
-	vector<Boid*>* boidBins[12][12];
+	int binSqrt = 100;
+	int w = 12;
+	int h = 8;
+	vector<Boid*>* boidBins[8][12];
 
 	// master list of boids
-	Boid boidList[500];
+	int boidCapacity = 1000;
+	Boid boidList[1000];
 	int boidCount;
 
 	// render window

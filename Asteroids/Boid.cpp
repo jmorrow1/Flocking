@@ -19,7 +19,11 @@ Boid::Boid() : Boid(0, 0, 8)
 Boid::Boid(float x, float y, float r)
 {
 	this->pos = Vector2f(x, y);
-	this->vel = Vector2f(0, 0);
+
+	float vx = -1 + (rand() % 3);
+	float vy = -1 + (rand() % 3);
+
+	this->vel = Vector2f(vx, vy);
 	this->acc = Vector2f(0, 0);
 	this->shape = ConvexShape();
 	this->radius = r;
@@ -137,13 +141,12 @@ void Boid::flockWith(std::vector<Boid*>& boids)
 	//}
 	separateFrom(boids);
 	alignWith(boids);
-	//cohereWith(boids);
+	cohereWith(boids);
 }
 
 void Boid::separateFrom(std::vector<Boid*>& boids)
 {
-	float desiredSeparation = 25.0f; // TODO parameterize
-	float sqDesiredSeparation = desiredSeparation * desiredSeparation;	
+	float sqDesiredSeparation = separationRadius * separationRadius;
 
 	Vector2f steering = Vector2f(0, 0);
 	int neighborCount = 0;
@@ -178,8 +181,7 @@ void Boid::separateFrom(std::vector<Boid*>& boids)
 
 void Boid::alignWith(std::vector<Boid*>& boids)
 {
-	float neighborDist = 50; // TODO parameterize
-	float sqNeighborDist = neighborDist * neighborDist;
+	float sqNeighborDist = alignRadius * alignRadius;
 	Vector2f sum(0, 0);
 
 	int neighborCount = 0;
@@ -188,7 +190,7 @@ void Boid::alignWith(std::vector<Boid*>& boids)
 		float sqDist = squareDistance(boids[i]->pos, pos);
 		if (0 < sqDist && sqDist <= sqNeighborDist)
 		{
-			sum += boids[i]->pos;
+			sum += boids[i]->vel;
 			neighborCount++;
 		}
 	}
@@ -206,8 +208,7 @@ void Boid::alignWith(std::vector<Boid*>& boids)
 
 void Boid::cohereWith(std::vector<Boid*>& boids)
 {
-	float neighborDist = 25; // TODO parameterize
-	float sqNeighborDist = neighborDist * neighborDist;
+	float sqNeighborDist = cohereRadius * cohereRadius;
 
 	Vector2f sum(0, 0);
 

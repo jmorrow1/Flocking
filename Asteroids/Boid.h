@@ -13,6 +13,10 @@ using namespace sf;
 class Boid
 {
 private:
+	float alignRadius = 50;
+	float separationRadius = 35;
+	float cohereRadius = 25;
+
 	Vector2f pos, vel, acc;
 	float radius;
 	float maxForce;

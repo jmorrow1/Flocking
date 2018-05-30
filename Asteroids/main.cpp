@@ -19,7 +19,7 @@ const float SPF = 1.0f / FPS;
 const int MSPF = (int) (SPF * 1000);
 
 // rendering window
-RenderWindow window(VideoMode(600, 600), "Flocking");
+RenderWindow window(VideoMode(1200, 800), "Flocking");
 
 // function prototypes
 void setup();
@@ -79,7 +79,7 @@ int main()
 }
 
 Flock boidContainer = Flock(&window);
-float boidRadius = 8;
+float boidRadius = 6;
 
 /*************************
  **** Initialization *****
@@ -87,7 +87,7 @@ float boidRadius = 8;
 
 void setup()
 {
-	boidContainer.addBoid(Boid(100, 100, boidRadius));
+
 }
 
 /*****************
@@ -96,6 +96,7 @@ void setup()
 
 void update()
 {
+	std::cout << boidContainer.getBoidCount() << ", ";
 	boidContainer.update();
 }
 
