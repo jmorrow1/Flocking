@@ -64,7 +64,7 @@ int main()
 		// draw
 		draw();
 
-		//std::cout << clock.getElapsedTime().asMilliseconds() << std::endl;
+		std::cout << clock.getElapsedTime().asMilliseconds() << std::endl;
 
 		// ensure frame rate will be no less than a fixed amount
 		int frameTimeLeft = MSPF - clock.getElapsedTime().asMilliseconds();

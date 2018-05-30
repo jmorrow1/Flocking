@@ -11,6 +11,11 @@ const float RAD_TO_DEG = 360.0f / TWO_PI;
 
 const float desiredSeparation = 25.0f;
 
+Boid::Boid() : Boid(0, 0, 8)
+{
+	
+}
+
 Boid::Boid(float x, float y, float r)
 {
 	this->pos = Vector2f(x, y);
@@ -124,14 +129,18 @@ void Boid::wrapToWindow(RenderWindow& window)
 
 }
 
-void Boid::flockWith(std::vector<Boid>& boids)
+void Boid::flockWith(std::vector<Boid*>& boids)
 {
+	//if (boids.size() > 0)
+	//{
+	//	std::cout << boids.size() << std::endl;
+	//}
 	separateFrom(boids);
 	alignWith(boids);
-	cohereWith(boids);
+	//cohereWith(boids);
 }
 
-void Boid::separateFrom(std::vector<Boid>& boids)
+void Boid::separateFrom(std::vector<Boid*>& boids)
 {
 	float desiredSeparation = 25.0f; // TODO parameterize
 	float sqDesiredSeparation = desiredSeparation * desiredSeparation;	
@@ -140,12 +149,12 @@ void Boid::separateFrom(std::vector<Boid>& boids)
 	int neighborCount = 0;
 	for (int i = 0; i < boids.size(); i++)
 	{
-		float sqDist = squareDistance(boids[i].pos, pos);
+		float sqDist = squareDistance(boids[i]->pos, pos);
 		if (0 < sqDist && sqDist <= sqDesiredSeparation)
 		{
 			float dist = sqrt(sqDist);
 
-			Vector2f fromBoid = pos - boids[i].pos;
+			Vector2f fromBoid = pos - boids[i]->pos;
 			normalize(fromBoid);
 			fromBoid /= dist;
 			steering += fromBoid;
@@ -167,7 +176,7 @@ void Boid::separateFrom(std::vector<Boid>& boids)
 	
 }
 
-void Boid::alignWith(std::vector<Boid>& boids)
+void Boid::alignWith(std::vector<Boid*>& boids)
 {
 	float neighborDist = 50; // TODO parameterize
 	float sqNeighborDist = neighborDist * neighborDist;
@@ -176,10 +185,10 @@ void Boid::alignWith(std::vector<Boid>& boids)
 	int neighborCount = 0;
 	for (int i = 0; i < boids.size(); i++)
 	{
-		float sqDist = squareDistance(boids[i].pos, pos);
+		float sqDist = squareDistance(boids[i]->pos, pos);
 		if (0 < sqDist && sqDist <= sqNeighborDist)
 		{
-			sum += boids[i].pos;
+			sum += boids[i]->pos;
 			neighborCount++;
 		}
 	}
@@ -195,7 +204,7 @@ void Boid::alignWith(std::vector<Boid>& boids)
 	}
 }
 
-void Boid::cohereWith(std::vector<Boid>& boids)
+void Boid::cohereWith(std::vector<Boid*>& boids)
 {
 	float neighborDist = 25; // TODO parameterize
 	float sqNeighborDist = neighborDist * neighborDist;
@@ -205,10 +214,10 @@ void Boid::cohereWith(std::vector<Boid>& boids)
 	int neighborCount = 0;
 	for (int i = 0; i < boids.size(); i++)
 	{
-		float sqDist = squareDistance(boids[i].pos, pos);
+		float sqDist = squareDistance(boids[i]->pos, pos);
 		if (0 < sqDist && sqDist < sqNeighborDist)
 		{
-			sum += boids[i].pos;
+			sum += boids[i]->pos;
 			neighborCount++;
 		}
 	}

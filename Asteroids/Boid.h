@@ -22,15 +22,16 @@ private:
 
 public:
 	ConvexShape shape;
+	Boid();
 	Boid(float x, float y, float r);
 	~Boid();
 
 	void seek(const Vector2f& target);
 	
-	void flockWith(std::vector<Boid>& boids);
-	void separateFrom(std::vector<Boid>& boids);
-	void alignWith(std::vector<Boid>& boids);
-	void cohereWith(std::vector<Boid>& boids);
+	void flockWith(std::vector<Boid*>& boids);
+	void separateFrom(std::vector<Boid*>& boids);
+	void alignWith(std::vector<Boid*>& boids);
+	void cohereWith(std::vector<Boid*>& boids);
 
 	void update();
 	void draw(RenderWindow& window);

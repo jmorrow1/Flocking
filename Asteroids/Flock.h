@@ -7,8 +7,12 @@ using namespace std;
 class Flock
 {
 private:
+	// bins of boids
+	vector<Boid*>* boidBins[12][12];
+
 	// master list of boids
-	vector<Boid> boidList;
+	Boid boidList[500];
+	int boidCount;
 
 	// render window
 	RenderWindow* window;
