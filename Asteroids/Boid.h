@@ -13,12 +13,12 @@ using namespace sf;
 class Boid
 {
 private:
-	float alignRadius = 50;
-	float separationRadius = 35;
+	float alignRadius = 40;
+	float separationRadius = 30;
 	float cohereRadius = 25;
 
 	float alignmentWeight = 1.0f;
-	float separationWeight = 1.0f;
+	float separationWeight = 1.05f;
 	float coherenceWeight = 1.0f;
 
 	Color color;

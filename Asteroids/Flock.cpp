@@ -49,8 +49,12 @@ void Flock::update()
 
 			for (int n = 0; n < boidBins[j][i]->size(); n++)
 			{
-				boidBins[j][i]->at(n)->flockWith(boidList);
-				boidBins[j][i]->at(n)->update();
+				Boid* boidptr = boidBins[j][i]->at(n);
+				//boidptr->flockWith(boidList);
+				if (cohere) boidptr->cohereWith(boidList);
+				if (align) boidptr->alignWith(boidList);
+				if (separate) boidptr->separateFrom(boidList);
+				boidptr->update();
 			}
 
 			
@@ -80,7 +84,6 @@ void Flock::update()
 			boidBins[j][i]->push_back(&boidList[n]);
 		}
 	}
-	//std::cout << boidList.size() << std::endl;
 }
 
 void Flock::draw()
@@ -121,5 +124,13 @@ void Flock::addBoid(Boid boid)
 
 		// add to bin
 		boidBins[j][i]->push_back(boidptr);
+	}
+}
+
+void Flock::removeBoidFromEnd()
+{
+	if (boidCount > 0)
+	{
+		boidCount--;
 	}
 }

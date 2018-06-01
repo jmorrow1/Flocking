@@ -8,10 +8,10 @@ class Flock
 {
 private:
 	// bins of boids
-	int binSqrt = 50;
-	int w = 24;
-	int h = 16;
-	vector<Boid*>* boidBins[16][24];
+	int binSqrt = 75;
+	int w = 16;
+	int h = 9;
+	vector<Boid*>* boidBins[9][16];
 
 	// master list of boids
 	int boidCapacity = 1000;
@@ -23,6 +23,10 @@ private:
 	RenderTexture* offscreenCanvas;
 
 public:
+	bool separate = true;
+	bool align = true;
+	bool cohere = true;
+
 	Flock(RenderWindow* window, RenderTexture* offscreenCanvas);
 	~Flock();
 
@@ -32,5 +36,6 @@ public:
 	Boid& getBoid(int i);
 	int getBoidCount();
 	void addBoid(Boid boid);
+	void removeBoidFromEnd();
 };
 

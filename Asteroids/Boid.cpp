@@ -37,10 +37,13 @@ Boid::Boid(float x, float y, float r, Color color)
 	shape.setPoint(0, Vector2f(r, 0));
 	shape.setPoint(1, Vector2f(r * cos(0.75f * PI), r * sin(0.75f * PI)));
 	shape.setPoint(2, Vector2f(r * cos(1.25f * PI), r * sin(1.25f * PI)));
-	shape.setFillColor(Color::White);
+	shape.setFillColor(color);
+	shape.setOutlineColor(Color::White);
+	shape.setOutlineThickness(1.5f);
 
 	blob.setRadius(2);
 	blob.setFillColor(color);
+	blob.setOrigin(Vector2f(0, 0));
 }
 
 Boid::~Boid()
@@ -140,10 +143,6 @@ void Boid::wrapToWindow(RenderWindow& window)
 
 void Boid::flockWith(std::vector<Boid*>& boids)
 {
-	//if (boids.size() > 0)
-	//{
-	//	std::cout << boids.size() << std::endl;
-	//}
 	separateFrom(boids);
 	alignWith(boids);
 	cohereWith(boids);
